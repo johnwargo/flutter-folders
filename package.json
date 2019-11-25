@@ -8,5 +8,9 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "John M. Wargo <john@johnwargo.com> (johnwargo.com)",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^3.0.0",
+    "shelljs": "^0.8.3"
+  }
 }
