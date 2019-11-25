@@ -11,4 +11,4 @@ A simple node module that automatically creates project subfolders in a Flutter 
 + `lib/utils`
 + `lib/widgets`
 
-Should also update the pubspec.yaml file to add an `assets` secrtion pointing to the assets folders
+Should also update the `pubspec.yaml` file to add an `assets` secrtion pointing to the assets folders
