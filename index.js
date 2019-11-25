@@ -15,6 +15,16 @@ var projectFolders = [
     "lib/utils",
     "lib/widgets"
 ];
+var appName = '| Flutter Project Folder Generator |';
+var appAuthor = '| by John M. Wargo (johwargo.com)  |';
+var appHeader = '|==================================|';
+// const emptyHeader = '|                                  |';
+// Get started
+console.log(chalk.green(appHeader));
+console.log(chalk.green(appName));
+// console.log(chalk.green(emptyHeader));
+console.log(chalk.green(appAuthor));
+console.log(chalk.green(appHeader));
 // Make sure this is a Flutter project
 // Create the folders we need
 // Update the `pubspec.yaml` to point to the assets folders

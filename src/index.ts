@@ -2,7 +2,7 @@
 
 // Load the modules we'll need
 const chalk = require('chalk');
-var shell = require('shelljs');
+const shell = require('shelljs');
 
 // Application constants
 const pubSpec = 'pubspec.yaml'
@@ -16,6 +16,18 @@ const projectFolders: String[] = [
   `lib/utils`,
   `lib/widgets`
 ];
+
+const appName = '| Flutter Project Folder Generator |';
+const appAuthor = '| by John M. Wargo (johwargo.com)  |'
+const appHeader = '|==================================|';
+// const emptyHeader = '|                                  |';
+
+// Get started
+console.log(chalk.green(appHeader));
+console.log(chalk.green(appName));
+// console.log(chalk.green(emptyHeader));
+console.log(chalk.green(appAuthor));
+console.log(chalk.green(appHeader));
 
 // Make sure this is a Flutter project
 
