@@ -3,11 +3,10 @@
   "version": "1.0.0",
   "description": "Node module for creating flutter lib folder structure",
   "main": "index.js",
-  "bin": "./dist/index.js",
+  "bin": "index.js",
   "scripts": {
-    "tsc": "tsc",
     "dev": "ts-node-dev --respawn --transpileOnly ./src/index.ts",
-    "prod": "tsc && node ./index.js"
+    "prod": "tsc && node ./dist/index.js"
   },
   "author": "John M. Wargo <john@johnwargo.com> (johnwargo.com)",
   "license": "MIT",
