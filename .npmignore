@@ -6,3 +6,4 @@ src/
 # Files
 package-lock.json
 tsconfig.json
+pubspec.yaml
