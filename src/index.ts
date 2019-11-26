@@ -36,12 +36,21 @@ function checkFile(filePath: string): boolean {
 }
 
 function checkDirectory(filePath: string): boolean {
-  // console.log(`Checking directory ${filePath}`);
-  try {
-    let stats = fs.statSync(filePath);
-    return stats.isDirectory;
-  } catch (err) {
-    console.error(`checkDirectory error: ${err}`);
+  // does the folder exist?
+  if (fs.existsSync(filePath)) {
+    // Check to see if it's a folder
+    try {
+      let stats = fs.statSync(filePath);
+      if (stats) {
+        return stats.isDirectory;
+      } else {
+        return false;
+      }
+    } catch (err) {
+      console.error(`checkDirectory error: ${err}`);
+      return false;
+    }
+  } else {
     return false;
   }
 }
@@ -58,7 +67,7 @@ console.log(chalk.yellow('\nValidating Flutter project'));
 // does the pubspec file exist?
 let filePath = path.join(currentPath, pubSpec);
 if (!checkFile(filePath)) {
-  console.log(exitHeading + ` Unable to locate the ${filePath} file`);
+  console.log(exitHeading + ` Unable to locate the ${filePath} file\n`);
   shell.exit(1);
 } else {
   console.log(`Found ${filePath} file`);
@@ -67,7 +76,7 @@ if (!checkFile(filePath)) {
 // Does the lib folder exist?
 filePath = path.join(currentPath, 'lib');
 if (!checkDirectory(filePath)) {
-  console.log(exitHeading + ` Unable to locate the ${filePath} file`);
+  console.log(exitHeading + ` Unable to locate the ${filePath} folder\n`);
   shell.exit(1);
 } else {
   console.log(`Found ${filePath} file`);
@@ -88,12 +97,15 @@ console.log(chalk.green('We have a Flutter project'));
 console.log(chalk.yellow('\nCreating project folders'));
 for (let folder of projectFolders) {
   let folderPath = path.join(currentPath, folder);
-
-  // TODO: check to make sure the folder doesn't exist already
-
-  console.log(`Creating ${folderPath}`);
-  fs.mkdirSync(folderPath);
+  console.log(`Checking ${folderPath}`);
+  if (!checkDirectory(folderPath)) {
+    console.log(chalk.green(`Creating ${folderPath}`));
+    fs.mkdirSync(folderPath);
+  } else {
+    console.log(chalk.red(`Skipping ${folderPath} (directory already exists)`));
+  }
 }
 
+// TODO: Update the pubspec.yaml file, add assets section
 // Update the `pubspec.yaml` to point to the assets folders
-console.log(chalk.yellow(`\nUpdating the ${pubSpec} file`));
+// console.log(chalk.yellow(`\nUpdating the ${pubSpec} file`));

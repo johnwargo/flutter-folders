@@ -33,13 +33,24 @@ function checkFile(filePath) {
     }
 }
 function checkDirectory(filePath) {
-    // console.log(`Checking directory ${filePath}`);
-    try {
-        var stats = fs.statSync(filePath);
-        return stats.isDirectory;
+    // does the folder exist?
+    if (fs.existsSync(filePath)) {
+        // Check to see if it's a folder
+        try {
+            var stats = fs.statSync(filePath);
+            if (stats) {
+                return stats.isDirectory;
+            }
+            else {
+                return false;
+            }
+        }
+        catch (err) {
+            console.error("checkDirectory error: " + err);
+            return false;
+        }
     }
-    catch (err) {
-        console.error("checkDirectory error: " + err);
+    else {
         return false;
     }
 }
@@ -53,7 +64,7 @@ console.log(chalk.yellow('\nValidating Flutter project'));
 // does the pubspec file exist?
 var filePath = path.join(currentPath, pubSpec);
 if (!checkFile(filePath)) {
-    console.log(exitHeading + (" Unable to locate the " + filePath + " file"));
+    console.log(exitHeading + (" Unable to locate the " + filePath + " file\n"));
     shell.exit(1);
 }
 else {
@@ -62,7 +73,7 @@ else {
 // Does the lib folder exist?
 filePath = path.join(currentPath, 'lib');
 if (!checkDirectory(filePath)) {
-    console.log(exitHeading + (" Unable to locate the " + filePath + " file"));
+    console.log(exitHeading + (" Unable to locate the " + filePath + " folder\n"));
     shell.exit(1);
 }
 else {
@@ -84,8 +95,13 @@ console.log(chalk.yellow('\nCreating project folders'));
 for (var _i = 0, projectFolders_1 = projectFolders; _i < projectFolders_1.length; _i++) {
     var folder = projectFolders_1[_i];
     var folderPath = path.join(currentPath, folder);
-    console.log("Creating " + folderPath);
-    fs.mkdirSync(folderPath);
+    if (!checkDirectory(folderPath)) {
+        console.log(chalk.green("Creating " + folderPath));
+        fs.mkdirSync(folderPath);
+    }
+    else {
+        console.log(chalk.red("Skipping " + folderPath + " (directory already exists)"));
+    }
 }
 // Update the `pubspec.yaml` to point to the assets folders
 console.log(chalk.yellow("\nUpdating the " + pubSpec + " file"));

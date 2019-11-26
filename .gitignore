@@ -63,3 +63,4 @@ typings/
 package-lock.json
 pubspec.yaml
 lib/
+assets/
