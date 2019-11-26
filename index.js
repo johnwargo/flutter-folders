@@ -1,12 +1,14 @@
 #!/usr/bin/env node
 "use strict";
-// Load the modules we'll need
 var chalk = require('chalk');
 var fs = require('fs');
 var path = require('path');
 var shell = require('shelljs');
-// Application constants
-var pubSpec = 'pubspec.yaml';
+var appName = '| Flutter Project Folder Generator |';
+var appAuthor = '| by John M. Wargo (johwargo.com)  |';
+var appHeader = '|==================================|';
+var currentPath = process.cwd();
+var exitHeading = chalk.red('Exiting:');
 var projectFolders = [
     "assets",
     "assets/images",
@@ -17,13 +19,8 @@ var projectFolders = [
     "lib/utils",
     "lib/widgets"
 ];
-var appName = '| Flutter Project Folder Generator |';
-var appAuthor = '| by John M. Wargo (johwargo.com)  |';
-var appHeader = '|==================================|';
-var currentPath = process.cwd();
-var exitHeading = chalk.red('Exiting:');
+var pubSpec = 'pubspec.yaml';
 function checkFile(filePath) {
-    // console.log(`Checking file ${filePath}`);
     try {
         return fs.existsSync(filePath);
     }
@@ -33,9 +30,7 @@ function checkFile(filePath) {
     }
 }
 function checkDirectory(filePath) {
-    // does the folder exist?
     if (fs.existsSync(filePath)) {
-        // Check to see if it's a folder
         try {
             var stats = fs.statSync(filePath);
             if (stats) {
@@ -54,14 +49,11 @@ function checkDirectory(filePath) {
         return false;
     }
 }
-// Get started
 console.log(chalk.green(appHeader));
 console.log(chalk.green(appName));
 console.log(chalk.green(appAuthor));
 console.log(chalk.green(appHeader));
-// Make sure this is a Flutter project
 console.log(chalk.yellow('\nValidating Flutter project'));
-// does the pubspec file exist?
 var filePath = path.join(currentPath, pubSpec);
 if (!checkFile(filePath)) {
     console.log(exitHeading + (" Unable to locate the " + filePath + " file\n"));
@@ -70,7 +62,6 @@ if (!checkFile(filePath)) {
 else {
     console.log("Found " + filePath + " file");
 }
-// Does the lib folder exist?
 filePath = path.join(currentPath, 'lib');
 if (!checkDirectory(filePath)) {
     console.log(exitHeading + (" Unable to locate the " + filePath + " folder\n"));
@@ -79,10 +70,8 @@ if (!checkDirectory(filePath)) {
 else {
     console.log("Found " + filePath + " file");
 }
-// is flutter installed?
 filePath = shell.which('flutter').toString();
 if (!filePath) {
-    // TODO: does this work if Flutter isn't installed globally?
     console.log(exitHeading + ' Unable to locate the Flutter command\n');
     shell.exit(1);
 }
@@ -90,11 +79,11 @@ else {
     console.log("Found Flutter command at " + path.dirname(filePath));
 }
 console.log(chalk.green('We have a Flutter project'));
-// Create the folders we need
 console.log(chalk.yellow('\nCreating project folders'));
 for (var _i = 0, projectFolders_1 = projectFolders; _i < projectFolders_1.length; _i++) {
     var folder = projectFolders_1[_i];
     var folderPath = path.join(currentPath, folder);
+    console.log("Checking " + folderPath);
     if (!checkDirectory(folderPath)) {
         console.log(chalk.green("Creating " + folderPath));
         fs.mkdirSync(folderPath);
@@ -103,5 +92,3 @@ for (var _i = 0, projectFolders_1 = projectFolders; _i < projectFolders_1.length
         console.log(chalk.red("Skipping " + folderPath + " (directory already exists)"));
     }
 }
-// Update the `pubspec.yaml` to point to the assets folders
-console.log(chalk.yellow("\nUpdating the " + pubSpec + " file"));

@@ -3,11 +3,15 @@
 // Load the modules we'll need
 const chalk = require('chalk');
 const fs = require('fs');
-var path = require('path');
+const path = require('path');
 const shell = require('shelljs');
 
 // Application constants
-const pubSpec = 'pubspec.yaml'
+const appName = '| Flutter Project Folder Generator |';
+const appAuthor = '| by John M. Wargo (johwargo.com)  |'
+const appHeader = '|==================================|';
+const currentPath = process.cwd();
+const exitHeading = chalk.red('Exiting:');
 const projectFolders: String[] = [
   `assets`,
   `assets/images`,
@@ -18,15 +22,9 @@ const projectFolders: String[] = [
   `lib/utils`,
   `lib/widgets`
 ];
-
-const appName = '| Flutter Project Folder Generator |';
-const appAuthor = '| by John M. Wargo (johwargo.com)  |'
-const appHeader = '|==================================|';
-const currentPath = process.cwd();
-const exitHeading = chalk.red('Exiting:');
+const pubSpec = 'pubspec.yaml'
 
 function checkFile(filePath: string): boolean {
-  // console.log(`Checking file ${filePath}`);
   try {
     return fs.existsSync(filePath);
   } catch (err) {
@@ -63,7 +61,6 @@ console.log(chalk.green(appHeader));
 
 // Make sure this is a Flutter project
 console.log(chalk.yellow('\nValidating Flutter project'));
-
 // does the pubspec file exist?
 let filePath = path.join(currentPath, pubSpec);
 if (!checkFile(filePath)) {
@@ -72,7 +69,6 @@ if (!checkFile(filePath)) {
 } else {
   console.log(`Found ${filePath} file`);
 }
-
 // Does the lib folder exist?
 filePath = path.join(currentPath, 'lib');
 if (!checkDirectory(filePath)) {
@@ -81,7 +77,6 @@ if (!checkDirectory(filePath)) {
 } else {
   console.log(`Found ${filePath} file`);
 }
-
 // is flutter installed?
 filePath = shell.which('flutter').toString();
 if (!filePath) {
