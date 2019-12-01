@@ -91,7 +91,6 @@ function makeFolders() {
   console.log(chalk.yellow('\nCreating project folders'));
   for (let folder of projectFolders) {
     let folderPath = path.join(currentPath, folder);
-    // console.log(`Checking ${folderPath}`);
     if (!checkDirectory(folderPath)) {
       console.log(chalk.green(`Creating ${folderPath}`));
       fs.mkdirSync(folderPath);
