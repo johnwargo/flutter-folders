@@ -5,11 +5,11 @@ var chalk = require('chalk');
 var fs = require('fs');
 var path = require('path');
 var shell = require('shelljs');
-var appName = 'Flutter Project Folder Generator';
-var appAuthor = '  by John M. Wargo (johwargo.com)';
-var currentPath = process.cwd();
-var exitHeading = chalk.red('Exiting:');
-var projectFolders = [
+var APPNAME = 'Flutter Project Folder Generator';
+var APPAUTHOR = '  by John M. Wargo (johwargo.com)';
+var CURRENTPATH = process.cwd();
+var EXITHEADING = chalk.red('Exiting:');
+var PROJECTFOLDERS = [
     "assets",
     "assets/images",
     "assets/other",
@@ -19,7 +19,7 @@ var projectFolders = [
     "lib/utils",
     "lib/widgets"
 ];
-var pubSpec = 'pubspec.yaml';
+var PUBSPECFILE = 'pubspec.yaml';
 function checkFile(filePath) {
     try {
         return fs.existsSync(filePath);
@@ -50,20 +50,20 @@ function checkDirectory(filePath) {
     }
 }
 function makeFolders() {
-    console.log(boxen(appName, { padding: 1 }));
-    console.log(appAuthor);
+    console.log(boxen(APPNAME, { padding: 1 }));
+    console.log(APPAUTHOR);
     console.log(chalk.yellow('\nValidating Flutter project'));
-    var filePath = path.join(currentPath, pubSpec);
+    var filePath = path.join(CURRENTPATH, PUBSPECFILE);
     if (!checkFile(filePath)) {
-        console.log(exitHeading + (" Unable to locate the " + filePath + " file\n"));
+        console.log(EXITHEADING + (" Unable to locate the " + filePath + " file\n"));
         shell.exit(1);
     }
     else {
         console.log("Found " + filePath + " file");
     }
-    filePath = path.join(currentPath, 'lib');
+    filePath = path.join(CURRENTPATH, 'lib');
     if (!checkDirectory(filePath)) {
-        console.log(exitHeading + (" Unable to locate the " + filePath + " folder\n"));
+        console.log(EXITHEADING + (" Unable to locate the " + filePath + " folder\n"));
         shell.exit(1);
     }
     else {
@@ -71,7 +71,7 @@ function makeFolders() {
     }
     filePath = shell.which('flutter').toString();
     if (!filePath) {
-        console.log(exitHeading + ' Unable to locate the Flutter command\n');
+        console.log(EXITHEADING + ' Unable to locate the Flutter command\n');
         shell.exit(1);
     }
     else {
@@ -79,9 +79,9 @@ function makeFolders() {
     }
     console.log(chalk.green('We have a Flutter project'));
     console.log(chalk.yellow('\nCreating project folders'));
-    for (var _i = 0, projectFolders_1 = projectFolders; _i < projectFolders_1.length; _i++) {
-        var folder = projectFolders_1[_i];
-        var folderPath = path.join(currentPath, folder);
+    for (var _i = 0, PROJECTFOLDERS_1 = PROJECTFOLDERS; _i < PROJECTFOLDERS_1.length; _i++) {
+        var folder = PROJECTFOLDERS_1[_i];
+        var folderPath = path.join(CURRENTPATH, folder);
         if (!checkDirectory(folderPath)) {
             console.log(chalk.green("Creating " + folderPath));
             fs.mkdirSync(folderPath);
