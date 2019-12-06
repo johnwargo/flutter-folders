@@ -1,7 +1,7 @@
 {
   "name": "flutter-folders",
   "version": "1.0.5",
-  "description": "Node module for creating flutter lib folder structure",
+  "description": "Node module for creating flutter asset and lib folder structure",
   "main": "flutter-folders.js",
   "bin": "bin/flutter-folders",
   "scripts": {
