@@ -2,10 +2,10 @@
   "name": "flutter-folders",
   "version": "1.0.3",
   "description": "Node module for creating flutter lib folder structure",
-  "main": "index.js",
-  "bin": "index.js",
+  "main": "flutter-folders.js",
+  "bin": "bin/flutter-folders",
   "scripts": {
-    "exec": "tsc && node ./index.js"
+    "exec": "tsc && node ./flutter-folders.js"
   },
   "author": "John M. Wargo <john@johnwargo.com> (johnwargo.com)",
   "license": "MIT",

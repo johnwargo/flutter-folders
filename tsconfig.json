@@ -67,6 +67,6 @@
   //   "src/**/*"
   // ],  
   "files": [
-    "./src/index.ts"
+    "src/flutter-folders.ts"
 ]                    /* Specify the root directory of input files. Use to control the output directory structure with --outDir. */
 }
