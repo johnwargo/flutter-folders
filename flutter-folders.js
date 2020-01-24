@@ -13,6 +13,7 @@ var PROJECTFOLDERS = [
     "assets",
     "assets/images",
     "assets/other",
+    'lib/classes',
     "lib/models",
     "lib/pages",
     "lib/services",
