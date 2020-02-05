@@ -53,7 +53,7 @@ assets:
 - assets/other/
 ```
 
-This tells Flutter where to look for assets when building the project. 
+This tells Flutter where to look for asset files when building the project.
 
 ## Configuring the Module
 
