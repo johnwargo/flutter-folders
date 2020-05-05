@@ -9,19 +9,20 @@ const shell = require('shelljs');
 
 // constants
 const APPNAME = 'Flutter Project Folder Generator';
-const APPAUTHOR = '  by John M. Wargo (johwargo.com)';
+const APPAUTHOR = '  by John M. Wargo (https://johwargo.com)';
 const CURRENTPATH = process.cwd();
 const EXITHEADING = chalk.red('Exiting:');
 const PROJECTFOLDERS: String[] = [
-  `assets`,
-  `assets/images`,
-  `assets/other`,
+  'assets',
+  'assets/icon',
+  'assets/images',
+  'assets/other',
   'lib/classes',
-  `lib/models`,
-  `lib/pages`,
-  `lib/services`,
-  `lib/utils`,
-  `lib/widgets`
+  'lib/models',
+  'lib/pages',
+  'lib/services',
+  'lib/utils',
+  'lib/widgets'
 ];
 const PUBSPECFILE = 'pubspec.yaml'
 

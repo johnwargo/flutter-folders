@@ -6,19 +6,20 @@ var fs = require('fs');
 var path = require('path');
 var shell = require('shelljs');
 var APPNAME = 'Flutter Project Folder Generator';
-var APPAUTHOR = '  by John M. Wargo (johwargo.com)';
+var APPAUTHOR = '  by John M. Wargo (https://johwargo.com)';
 var CURRENTPATH = process.cwd();
 var EXITHEADING = chalk.red('Exiting:');
 var PROJECTFOLDERS = [
-    "assets",
-    "assets/images",
-    "assets/other",
+    'assets',
+    'assets/icon',
+    'assets/images',
+    'assets/other',
     'lib/classes',
-    "lib/models",
-    "lib/pages",
-    "lib/services",
-    "lib/utils",
-    "lib/widgets"
+    'lib/models',
+    'lib/pages',
+    'lib/services',
+    'lib/utils',
+    'lib/widgets'
 ];
 var PUBSPECFILE = 'pubspec.yaml';
 function checkFile(filePath) {
