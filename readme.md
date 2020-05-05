@@ -2,7 +2,7 @@
 
 The Flutter developer tools from Google create a simple folder structure for new Flutter apps as shown in the following figure. The app's main source code file is a file called `main.dart` located in the project's `lib` folder. This approach is great for simple apps, but as soon as you add additional pages to your app, a few classes, and some data services, that `lib` folder gets pretty cluttered.
 
-![Flutter Project Folder](images/image-01.png)
+![Flutter Project Folder](/images/image-01.png)
 
 One approach to for de-cluttering the project is to create separate folders for each type of project file, putting class files in a `class` folder, page files in a `pages` folder, etc. This project provides a simple node module that automatically creates project sub-folders in a Flutter project's `lib` folder. It also creates a higher-level `assets` folder to store image files and other assets used by your application.
 
