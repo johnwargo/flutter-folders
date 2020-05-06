@@ -50,8 +50,9 @@ Replace that content with the following:
 ```yaml
 # To add assets to your application, add an assets section, like this:
 assets:
-- assets/images/
-- assets/other/
+  - assets/icon
+  - assets/images/
+  - assets/other/
 ```
 
 This tells Flutter where to look for asset files when building the project.

@@ -5,6 +5,7 @@ var chalk = require('chalk');
 var fs = require('fs');
 var path = require('path');
 var shell = require('shelljs');
+https: var yaml = require('js-yaml');
 var APPNAME = 'Flutter Project Folder Generator';
 var APPAUTHOR = '  by John M. Wargo (https://johwargo.com)';
 var CURRENTPATH = process.cwd();
@@ -22,6 +23,15 @@ var PROJECTFOLDERS = [
     'lib/widgets'
 ];
 var PUBSPECFILE = 'pubspec.yaml';
+function updatePubspec(filePath) {
+    var fileContents = fs.readFileSync(filePath, 'utf8');
+    var data = yaml.safeLoad(fileContents);
+    console.dir(data);
+    data.assets = ['assets/icon', 'assets/images', 'assets/other'];
+    console.dir(data);
+    var yamlStr = yaml.safeDump(data);
+    fs.writeFileSync(filePath, yamlStr, 'utf8');
+}
 function checkFile(filePath) {
     try {
         return fs.existsSync(filePath);
@@ -87,6 +97,7 @@ function makeFolders() {
         if (!checkDirectory(folderPath)) {
             console.log(chalk.green("Creating " + folderPath));
             fs.mkdirSync(folderPath);
+            updatePubspec(path.join(CURRENTPATH, PUBSPECFILE));
         }
         else {
             console.log(chalk.red("Skipping " + folderPath + " (directory already exists)"));

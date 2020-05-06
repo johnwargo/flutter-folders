@@ -64,3 +64,4 @@ package-lock.json
 pubspec.yaml
 lib/
 assets/
+ff-test.cmd

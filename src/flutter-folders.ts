@@ -6,6 +6,8 @@ const chalk = require('chalk');
 const fs = require('fs');
 const path = require('path');
 const shell = require('shelljs');
+https://stackabuse.com/reading-and-writing-yaml-to-a-file-in-node-js-javascript/
+const yaml = require('js-yaml')
 
 // constants
 const APPNAME = 'Flutter Project Folder Generator';
@@ -25,6 +27,16 @@ const PROJECTFOLDERS: String[] = [
   'lib/widgets'
 ];
 const PUBSPECFILE = 'pubspec.yaml'
+
+function updatePubspec(filePath: string) {
+  let fileContents = fs.readFileSync(filePath, 'utf8');
+  let data = yaml.safeLoad(fileContents);
+  console.dir(data);
+  data.assets = ['assets/icon', 'assets/images', 'assets/other'];
+  console.dir(data);
+  let yamlStr = yaml.safeDump(data);
+  fs.writeFileSync(filePath, yamlStr, 'utf8');
+}
 
 function checkFile(filePath: string): boolean {
   try {
@@ -70,6 +82,7 @@ function makeFolders() {
   } else {
     console.log(`Found ${filePath} file`);
   }
+
   // Does the lib folder exist?
   filePath = path.join(CURRENTPATH, 'lib');
   if (!checkDirectory(filePath)) {
@@ -96,6 +109,7 @@ function makeFolders() {
     if (!checkDirectory(folderPath)) {
       console.log(chalk.green(`Creating ${folderPath}`));
       fs.mkdirSync(folderPath);
+      updatePubspec(path.join(CURRENTPATH, PUBSPECFILE));
     } else {
       console.log(chalk.red(`Skipping ${folderPath} (directory already exists)`));
     }
