@@ -25,6 +25,7 @@ flutter-folders
 The module first validates that it's running inside a Flutter project folder, then creates the following folders:
 
 + `assets`
++ `assets/icon`
 + `assets/images`
 + `assets/other`
 + `lib/models`
