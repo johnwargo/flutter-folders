@@ -22,11 +22,11 @@ https://stackabuse.com/reading-and-writing-yaml-to-a-file-in-node-js-javascript/
 const yaml = require('js-yaml')
 
 // constants
-const APPNAME = 'Flutter Folders';
-const APPAUTHOR = 'by John M. Wargo (https://johwargo.com)';
-const CURRENTPATH = process.cwd();
-const EXITHEADING = chalk.red('Exiting:');
-const PROJECTFOLDERS: String[] = [
+const APP_NAME = 'Flutter Folders';
+const APP_AUTHOR = 'by John M. Wargo (https://johwargo.com)';
+const CURRENT_PATH = process.cwd();
+const EXIT_HEADING = chalk.red('Exiting:');
+const PROJECT_FOLDERS: String[] = [
   'assets',
   'assets/icon',
   'assets/images',
@@ -38,13 +38,13 @@ const PROJECTFOLDERS: String[] = [
   'lib/utils',
   'lib/widgets'
 ];
-const PUBSPECFILE = 'pubspec.yaml'
+const PUBSPEC_FILE = 'pubspec.yaml'
 
 var log = logger();
 
 function updatePubspec() {
-  log.info(`Updating the ${PUBSPECFILE} file`);
-  let pubspecPath = path.join(CURRENTPATH, PUBSPECFILE);
+  log.info(`Updating the ${PUBSPEC_FILE} file`);
+  let pubspecPath = path.join(CURRENT_PATH, PUBSPEC_FILE);
   try {
     let fileContents = fs.readFileSync(pubspecPath, 'utf8');
     let data = yaml.safeLoad(fileContents);
@@ -91,18 +91,18 @@ function isValidConfig(): Boolean {
   // Make sure this is a Flutter project
   log.info(chalk.yellow('\nValidating Flutter project'));
   // does the pubspec file exist?
-  let filePath = path.join(CURRENTPATH, PUBSPECFILE);
+  let filePath = path.join(CURRENT_PATH, PUBSPEC_FILE);
   if (!checkFile(filePath)) {
-    log.info(EXITHEADING + ` Unable to locate the ${filePath} file\n`);
+    log.info(EXIT_HEADING + ` Unable to locate the ${filePath} file\n`);
     return false;
   } else {
     log.info(`Found ${filePath} file`);
   }
 
   // Does the lib folder exist?
-  filePath = path.join(CURRENTPATH, 'lib');
+  filePath = path.join(CURRENT_PATH, 'lib');
   if (!checkDirectory(filePath)) {
-    log.info(EXITHEADING + ` Unable to locate the ${filePath} folder\n`);
+    log.info(EXIT_HEADING + ` Unable to locate the ${filePath} folder\n`);
     return false;
   } else {
     log.info(`Found ${filePath} file`);
@@ -111,7 +111,7 @@ function isValidConfig(): Boolean {
   filePath = shell.which('flutter').toString();
   if (!filePath) {
     // TODO: does this work if Flutter isn't installed globally?
-    log.info(EXITHEADING + ' Unable to locate the Flutter command\n');
+    log.info(EXIT_HEADING + ' Unable to locate the Flutter command\n');
     return false;
   } else {
     log.info(`Found Flutter command at ${path.dirname(filePath)}`);
@@ -124,8 +124,8 @@ function isValidConfig(): Boolean {
 function makeFolders() {
   // Create the folders we need
   log.info(chalk.yellow('\nCreating project folders'));
-  for (let folder of PROJECTFOLDERS) {
-    let folderPath = path.join(CURRENTPATH, folder);
+  for (let folder of PROJECT_FOLDERS) {
+    let folderPath = path.join(CURRENT_PATH, folder);
     if (!checkDirectory(folderPath)) {
       log.info(chalk.green(`Creating ${folderPath}`));
       try {
@@ -140,8 +140,8 @@ function makeFolders() {
 }
 
 // Get started
-console.log(boxen(APPNAME, { padding: 1 }));
-console.log(APPAUTHOR);
+console.log(boxen(APP_NAME, { padding: 1 }));
+console.log(APP_AUTHOR);
 console.log(`Version: ${packageDotJSON.version}`);
 
 // Get the version number from the package.json file

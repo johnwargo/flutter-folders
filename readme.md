@@ -1,8 +1,5 @@
 # Flutter-Folders
 
-//TODO: Update file for the -u command
-
-
 The Flutter developer tools from Google create a simple folder structure for new Flutter apps as shown in the following figure. The app's main source code file is a file called `main.dart` located in the project's `lib` folder. This approach is great for simple apps, but as soon as you add additional pages to your app, a few classes, and some data services, that `lib` folder gets pretty cluttered.
 
 ![Flutter Project Folder](/images/image-01.png)
@@ -19,32 +16,32 @@ npm install -g flutter-folders
 
 ## Using the Module
 
-To execute the module open a terminal window, navigate to the Flutter project folder, then execute the following command:
+To execute the module, open a terminal window, navigate to a Flutter project folder, then execute the following command:
 
 ```shell
 flutter-folders
 ```
 
-The module first validates that it's running inside a Flutter project folder, then creates the following folders:
+The module supports several command-line options:
 
-+ `assets`
-+ `assets/icon`
-+ `assets/images`
-+ `assets/other`
-+ `lib/models`
-+ `lib/pages`
-+ `lib/services`
-+ `lib/utils`
-+ `lib/widgets`
+* `-d` or `--debug`: Debug Mode - the module will throw extra stuff to the console so you can see better what's happening and why something isn't working.
+* `-u` or `--update`: Update Mode - Updates the `assets` settings in the project's `pubspec.yaml` file (described below).
+
+The module validates that it's running inside a Flutter project folder, then creates the following folders:
+
+* `assets`
+* `assets/icon`
+* `assets/images`
+* `assets/other`
+* `lib/models`
+* `lib/pages`
+* `lib/services`
+* `lib/utils`
+* `lib/widgets`
 
 With those folders in place, you can now start creating the additional source files your app needs in the appropriate folder based on the file purpose.
 
-
-You can also update the pubspec.yaml file
-> Note: this removes all comments from the file (sorry)
-
-
-A Flutter project won't automatically recognize the assets folders created by this module. To fix this, open the Flutter project's `pubspec.yaml` file and look for the following section:
+A Flutter project won't automatically recognize the `assets` folders created by this module. To fix this, open the Flutter project's `pubspec.yaml` file and look for the following section:
 
 ```yaml
 # To add assets to your application, add an assets section, like this:
@@ -53,7 +50,7 @@ A Flutter project won't automatically recognize the assets folders created by th
 #   - images/a_dot_ham.jpeg
 ```
 
-Replace that content with the following:
+Replace that (commented) content with the following (notice the `#` is removed):
 
 ```yaml
 # To add assets to your application, add an assets section, like this:
@@ -65,14 +62,26 @@ assets:
 
 This tells Flutter where to look for asset files when building the project.
 
+You can do this automatically, but there's a side-effect. When you execute the module using the following command:
 
+```shell
+flutter-folders -u
+```
 
-## Configuring the Module
+or:
 
-The module creates the folders listed earlier in this document based on my personal preference for Flutter files. If you want to use different folder names for your project, open this project's `src/flutter-folders.ts` file and modify the `PROJECTFOLDERS` array shown below:
+```shell
+flutter-folders --update
+```
+
+Flutter Folders will update the `assets` section of the `pubspec.yaml` as shown above. Unfortunately, when it does,it also removes any comments in the file (sorry).
+
+## Customization
+
+The module creates the folders listed earlier in this document based on my personal preference for Flutter files. If you want to use different folder names for your project, open this project's `src/flutter-folders.ts` file and modify the `PROJECT_FOLDERS` array shown below:
 
 ```typescript
-const PROJECTFOLDERS: String[] = [
+const PROJECT_FOLDERS: String[] = [
   `assets`,
   `assets/icon`,
   `assets/images`,
@@ -107,3 +116,7 @@ npm install -g
 ```
 
 This installs the modified module as a  global npm module on your system.
+
+***
+
+If you find this code useful, and feel like thanking me for providing it, please consider making a purchase from [my Amazon Wish List](https://amzn.com/w/1WI6AAUKPT5P9). You can find information on many different topics on my [personal blog](http://www.johnwargo.com). Learn about all of my publications at [John Wargo Books](http://www.johnwargobooks.com).

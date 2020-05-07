@@ -9,11 +9,11 @@ var path = require('path');
 var program = require('commander');
 var shell = require('shelljs');
 https: var yaml = require('js-yaml');
-var APPNAME = 'Flutter Folders';
-var APPAUTHOR = 'by John M. Wargo (https://johwargo.com)';
-var CURRENTPATH = process.cwd();
-var EXITHEADING = chalk.red('Exiting:');
-var PROJECTFOLDERS = [
+var APP_NAME = 'Flutter Folders';
+var APP_AUTHOR = 'by John M. Wargo (https://johwargo.com)';
+var CURRENT_PATH = process.cwd();
+var EXIT_HEADING = chalk.red('Exiting:');
+var PROJECT_FOLDERS = [
     'assets',
     'assets/icon',
     'assets/images',
@@ -25,16 +25,11 @@ var PROJECTFOLDERS = [
     'lib/utils',
     'lib/widgets'
 ];
-var PUBSPECFILE = 'pubspec.yaml';
+var PUBSPEC_FILE = 'pubspec.yaml';
 var log = logger();
-function setupLogger() {
-    var conf = program.debug ? log.DEBUG : log.INFO;
-    log.level(conf);
-    log.debug(program.opts());
-}
 function updatePubspec() {
-    log.info("Updating the " + PUBSPECFILE + " file");
-    var pubspecPath = path.join(CURRENTPATH, PUBSPECFILE);
+    log.info("Updating the " + PUBSPEC_FILE + " file");
+    var pubspecPath = path.join(CURRENT_PATH, PUBSPEC_FILE);
     try {
         var fileContents = fs.readFileSync(pubspecPath, 'utf8');
         var data = yaml.safeLoad(fileContents);
@@ -79,17 +74,17 @@ function checkDirectory(filePath) {
 }
 function isValidConfig() {
     log.info(chalk.yellow('\nValidating Flutter project'));
-    var filePath = path.join(CURRENTPATH, PUBSPECFILE);
+    var filePath = path.join(CURRENT_PATH, PUBSPEC_FILE);
     if (!checkFile(filePath)) {
-        log.info(EXITHEADING + (" Unable to locate the " + filePath + " file\n"));
+        log.info(EXIT_HEADING + (" Unable to locate the " + filePath + " file\n"));
         return false;
     }
     else {
         log.info("Found " + filePath + " file");
     }
-    filePath = path.join(CURRENTPATH, 'lib');
+    filePath = path.join(CURRENT_PATH, 'lib');
     if (!checkDirectory(filePath)) {
-        log.info(EXITHEADING + (" Unable to locate the " + filePath + " folder\n"));
+        log.info(EXIT_HEADING + (" Unable to locate the " + filePath + " folder\n"));
         return false;
     }
     else {
@@ -97,7 +92,7 @@ function isValidConfig() {
     }
     filePath = shell.which('flutter').toString();
     if (!filePath) {
-        log.info(EXITHEADING + ' Unable to locate the Flutter command\n');
+        log.info(EXIT_HEADING + ' Unable to locate the Flutter command\n');
         return false;
     }
     else {
@@ -108,9 +103,9 @@ function isValidConfig() {
 }
 function makeFolders() {
     log.info(chalk.yellow('\nCreating project folders'));
-    for (var _i = 0, PROJECTFOLDERS_1 = PROJECTFOLDERS; _i < PROJECTFOLDERS_1.length; _i++) {
-        var folder = PROJECTFOLDERS_1[_i];
-        var folderPath = path.join(CURRENTPATH, folder);
+    for (var _i = 0, PROJECT_FOLDERS_1 = PROJECT_FOLDERS; _i < PROJECT_FOLDERS_1.length; _i++) {
+        var folder = PROJECT_FOLDERS_1[_i];
+        var folderPath = path.join(CURRENT_PATH, folder);
         if (!checkDirectory(folderPath)) {
             log.info(chalk.green("Creating " + folderPath));
             try {
@@ -125,16 +120,17 @@ function makeFolders() {
         }
     }
 }
-console.log(boxen(APPNAME, { padding: 1 }));
-console.log(APPAUTHOR);
+console.log(boxen(APP_NAME, { padding: 1 }));
+console.log(APP_AUTHOR);
 console.log("Version: " + packageDotJSON.version);
 program.version(packageDotJSON.version);
 program.option('-d, --debug', 'Output extra information during operation');
 program.option('-u, --update', 'Update the Assets definition in the pubspec.yaml file');
 if (isValidConfig()) {
     program.parse(process.argv);
-    setupLogger();
-    log.info(chalk.green('Configuration is valid\n'));
+    var conf = program.debug ? log.DEBUG : log.INFO;
+    log.level(conf);
+    log.debug(program.opts());
     makeFolders();
     if (program.update) {
         updatePubspec();
