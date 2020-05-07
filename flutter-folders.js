@@ -90,16 +90,23 @@ function isValidConfig() {
     else {
         log.info("Located " + filePath);
     }
-    filePath = shell.which('flutter').toString();
-    if (!filePath) {
+    var res = shell.which('flutter');
+    if (res) {
+        filePath = res.toString();
+        if (!filePath) {
+            log.info(EXIT_HEADING + ' Unable to locate the Flutter command\n');
+            return false;
+        }
+        else {
+            log.info("Flutter command found at " + path.dirname(filePath));
+        }
+        log.info(chalk.green('We have a Flutter project'));
+        return true;
+    }
+    else {
         log.info(EXIT_HEADING + ' Unable to locate the Flutter command\n');
         return false;
     }
-    else {
-        log.info("Found Flutter command at " + path.dirname(filePath));
-    }
-    log.info(chalk.green('We have a Flutter project'));
-    return true;
 }
 function makeFolders() {
     log.info(chalk.yellow('\nCreating project folders'));
