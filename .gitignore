@@ -64,5 +64,3 @@ package-lock.json
 pubspec.*
 lib/
 assets/
-ff-test.cmd
-test.js

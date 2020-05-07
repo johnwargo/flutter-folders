@@ -1,5 +1,8 @@
 # Flutter-Folders
 
+//TODO: Update file for the -u command
+
+
 The Flutter developer tools from Google create a simple folder structure for new Flutter apps as shown in the following figure. The app's main source code file is a file called `main.dart` located in the project's `lib` folder. This approach is great for simple apps, but as soon as you add additional pages to your app, a few classes, and some data services, that `lib` folder gets pretty cluttered.
 
 ![Flutter Project Folder](/images/image-01.png)
@@ -36,6 +39,11 @@ The module first validates that it's running inside a Flutter project folder, th
 
 With those folders in place, you can now start creating the additional source files your app needs in the appropriate folder based on the file purpose.
 
+
+You can also update the pubspec.yaml file
+> Note: this removes all comments from the file (sorry)
+
+
 A Flutter project won't automatically recognize the assets folders created by this module. To fix this, open the Flutter project's `pubspec.yaml` file and look for the following section:
 
 ```yaml
@@ -57,6 +65,8 @@ assets:
 
 This tells Flutter where to look for asset files when building the project.
 
+
+
 ## Configuring the Module
 
 The module creates the folders listed earlier in this document based on my personal preference for Flutter files. If you want to use different folder names for your project, open this project's `src/flutter-folders.ts` file and modify the `PROJECTFOLDERS` array shown below:
@@ -64,6 +74,7 @@ The module creates the folders listed earlier in this document based on my perso
 ```typescript
 const PROJECTFOLDERS: String[] = [
   `assets`,
+  `assets/icon`,
   `assets/images`,
   `assets/other`,
   'lib/classes',
