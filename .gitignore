@@ -61,7 +61,8 @@ typings/
 .next
 
 package-lock.json
-pubspec.yaml
+pubspec.*
 lib/
 assets/
 ff-test.cmd
+test.js

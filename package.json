@@ -3,9 +3,10 @@
   "version": "1.0.9",
   "description": "Node module for creating flutter asset and lib folder structure",
   "main": "flutter-folders.js",
-  "bin": "bin/flutter-folders",
+  "bin": "./flutter-folders.js",
   "scripts": {
-    "exec": "tsc && node ./flutter-folders.js"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "tsc && node ./flutter-folders.js"
   },
   "author": "John M. Wargo <john@johnwargo.com> (https://johnwargo.com)",
   "license": "MIT",
@@ -13,6 +14,8 @@
     "@types/shelljs": "^0.8.6",
     "boxen": "^4.1.0",
     "chalk": "^3.0.0",
+    "cli-logger": "^0.5.40",
+    "commander": "^5.1.0",
     "js-yaml": "^3.13.1",
     "shelljs": "^0.8.3"
   }

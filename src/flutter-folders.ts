@@ -1,10 +1,23 @@
 #!/usr/bin/env node
+/**********************************************************
+ * Flutter Folders
+ * by John M. Wargo
+ * 
+ * Updates a flutter project's folder structure with 
+ * folders to group Dart files and assets.
+ **********************************************************/
+// TODO: Switch to logger instead of console.log
 
 // modules
 const boxen = require('boxen');
 const chalk = require('chalk');
 const fs = require('fs');
+const logger = require('cli-logger');
+// https://stackoverflow.com/questions/9153571/is-there-a-way-to-get-version-from-package-json-in-nodejs-code
+const packageDotJSON = require('./package.json');
 const path = require('path');
+// https://www.npmjs.com/package/commander
+const program = require('commander');
 const shell = require('shelljs');
 https://stackabuse.com/reading-and-writing-yaml-to-a-file-in-node-js-javascript/
 const yaml = require('js-yaml')
@@ -28,14 +41,26 @@ const PROJECTFOLDERS: String[] = [
 ];
 const PUBSPECFILE = 'pubspec.yaml'
 
-function updatePubspec(filePath: string) {
-  let fileContents = fs.readFileSync(filePath, 'utf8');
-  let data = yaml.safeLoad(fileContents);
-  console.dir(data);
-  data.assets = ['assets/icon', 'assets/images', 'assets/other'];
-  console.dir(data);
-  let yamlStr = yaml.safeDump(data);
-  fs.writeFileSync(filePath, yamlStr, 'utf8');
+var log = logger();
+
+function setupLogger() {
+  const conf = program.debug ? log.DEBUG : log.INFO;
+  log.level(conf);
+  log.debug(program.opts());
+}
+
+function updatePubspec() {
+  console.log(`Updating the ${PUBSPECFILE} file`);
+  let pubspecPath = path.join(CURRENTPATH, PUBSPECFILE);
+  try {
+    let fileContents = fs.readFileSync(pubspecPath, 'utf8');
+    let data = yaml.safeLoad(fileContents);
+    data.flutter.assets = ['assets/icon', 'assets/images', 'assets/other'];
+    let yamlStr = yaml.safeDump(data);
+    fs.writeFileSync(pubspecPath, yamlStr, 'utf8');
+  } catch (e) {
+    console.error(chalk.red(e.message));
+  }
 }
 
 function checkFile(filePath: string): boolean {
@@ -67,18 +92,14 @@ function checkDirectory(filePath: string): boolean {
   }
 }
 
-function makeFolders() {
-  // Get started
-  console.log(boxen(APPNAME, { padding: 1 }));
-  console.log(APPAUTHOR);
-
+function isValidConfig(): Boolean {
   // Make sure this is a Flutter project
   console.log(chalk.yellow('\nValidating Flutter project'));
   // does the pubspec file exist?
   let filePath = path.join(CURRENTPATH, PUBSPECFILE);
   if (!checkFile(filePath)) {
     console.log(EXITHEADING + ` Unable to locate the ${filePath} file\n`);
-    shell.exit(1);
+    return false;
   } else {
     console.log(`Found ${filePath} file`);
   }
@@ -87,7 +108,7 @@ function makeFolders() {
   filePath = path.join(CURRENTPATH, 'lib');
   if (!checkDirectory(filePath)) {
     console.log(EXITHEADING + ` Unable to locate the ${filePath} folder\n`);
-    shell.exit(1);
+    return false;
   } else {
     console.log(`Found ${filePath} file`);
   }
@@ -96,26 +117,52 @@ function makeFolders() {
   if (!filePath) {
     // TODO: does this work if Flutter isn't installed globally?
     console.log(EXITHEADING + ' Unable to locate the Flutter command\n');
-    shell.exit(1);
+    return false;
   } else {
     console.log(`Found Flutter command at ${path.dirname(filePath)}`);
   }
   console.log(chalk.green('We have a Flutter project'));
+  return true;
+}
 
-  // Create the folders we need
-  console.log(chalk.yellow('\nCreating project folders'));
+
+function makeFolders() {
+    // Create the folders we need
+  log.info(chalk.yellow('\nCreating project folders'));
   for (let folder of PROJECTFOLDERS) {
     let folderPath = path.join(CURRENTPATH, folder);
     if (!checkDirectory(folderPath)) {
-      console.log(chalk.green(`Creating ${folderPath}`));
-      fs.mkdirSync(folderPath);
-      updatePubspec(path.join(CURRENTPATH, PUBSPECFILE));
+      log.info(chalk.green(`Creating ${folderPath}`));
+      try {
+        fs.mkdirSync(folderPath);
+      } catch (e) {
+        log.info(chalk.red(`Unable to create ${folderPath} (e.message)`));
+      }
     } else {
-      console.log(chalk.red(`Skipping ${folderPath} (directory already exists)`));
+      log.info(chalk.red(`Skipping ${folderPath} (directory already exists)`));
     }
   }
 }
 
-module.exports = {
-  makeFolders
+// Get started
+console.log(boxen(APPNAME, { padding: 1 }));
+console.log(APPAUTHOR);
+
+// Get the version number from the package.json file
+program.version(packageDotJSON.version);
+console.log(`Version: ${program.version}`);
+program.option('-d, --debug', 'Output extra information during operation');
+program.option('-u, --update', 'Update the Assets definition in the pubspec.yaml file');
+
+
+if (isValidConfig()) {
+  program.parse(process.argv);
+  setupLogger();
+  log.info(chalk.green('Configuration is valid\n'));
+  makeFolders();
+  if (program.update) {
+    updatePubspec();
+  }
+} else {
+  console.log(chalk.red('Exiting'));
 }

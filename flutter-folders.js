@@ -3,7 +3,10 @@
 var boxen = require('boxen');
 var chalk = require('chalk');
 var fs = require('fs');
+var logger = require('cli-logger');
+var packageDotJSON = require('./package.json');
 var path = require('path');
+var program = require('commander');
 var shell = require('shelljs');
 https: var yaml = require('js-yaml');
 var APPNAME = 'Flutter Project Folder Generator';
@@ -23,14 +26,25 @@ var PROJECTFOLDERS = [
     'lib/widgets'
 ];
 var PUBSPECFILE = 'pubspec.yaml';
-function updatePubspec(filePath) {
-    var fileContents = fs.readFileSync(filePath, 'utf8');
-    var data = yaml.safeLoad(fileContents);
-    console.dir(data);
-    data.assets = ['assets/icon', 'assets/images', 'assets/other'];
-    console.dir(data);
-    var yamlStr = yaml.safeDump(data);
-    fs.writeFileSync(filePath, yamlStr, 'utf8');
+var log = logger();
+function setupLogger() {
+    var conf = program.debug ? log.DEBUG : log.INFO;
+    log.level(conf);
+    log.debug(program.opts());
+}
+function updatePubspec() {
+    console.log("Updating the " + PUBSPECFILE + " file");
+    var pubspecPath = path.join(CURRENTPATH, PUBSPECFILE);
+    try {
+        var fileContents = fs.readFileSync(pubspecPath, 'utf8');
+        var data = yaml.safeLoad(fileContents);
+        data.flutter.assets = ['assets/icon', 'assets/images', 'assets/other'];
+        var yamlStr = yaml.safeDump(data);
+        fs.writeFileSync(pubspecPath, yamlStr, 'utf8');
+    }
+    catch (e) {
+        console.error(chalk.red(e.message));
+    }
 }
 function checkFile(filePath) {
     try {
@@ -61,14 +75,12 @@ function checkDirectory(filePath) {
         return false;
     }
 }
-function makeFolders() {
-    console.log(boxen(APPNAME, { padding: 1 }));
-    console.log(APPAUTHOR);
+function isValidConfig() {
     console.log(chalk.yellow('\nValidating Flutter project'));
     var filePath = path.join(CURRENTPATH, PUBSPECFILE);
     if (!checkFile(filePath)) {
         console.log(EXITHEADING + (" Unable to locate the " + filePath + " file\n"));
-        shell.exit(1);
+        return false;
     }
     else {
         console.log("Found " + filePath + " file");
@@ -76,7 +88,7 @@ function makeFolders() {
     filePath = path.join(CURRENTPATH, 'lib');
     if (!checkDirectory(filePath)) {
         console.log(EXITHEADING + (" Unable to locate the " + filePath + " folder\n"));
-        shell.exit(1);
+        return false;
     }
     else {
         console.log("Found " + filePath + " file");
@@ -84,26 +96,48 @@ function makeFolders() {
     filePath = shell.which('flutter').toString();
     if (!filePath) {
         console.log(EXITHEADING + ' Unable to locate the Flutter command\n');
-        shell.exit(1);
+        return false;
     }
     else {
         console.log("Found Flutter command at " + path.dirname(filePath));
     }
     console.log(chalk.green('We have a Flutter project'));
-    console.log(chalk.yellow('\nCreating project folders'));
+    return true;
+}
+function makeFolders() {
+    log.info(chalk.yellow('\nCreating project folders'));
     for (var _i = 0, PROJECTFOLDERS_1 = PROJECTFOLDERS; _i < PROJECTFOLDERS_1.length; _i++) {
         var folder = PROJECTFOLDERS_1[_i];
         var folderPath = path.join(CURRENTPATH, folder);
         if (!checkDirectory(folderPath)) {
-            console.log(chalk.green("Creating " + folderPath));
-            fs.mkdirSync(folderPath);
-            updatePubspec(path.join(CURRENTPATH, PUBSPECFILE));
+            log.info(chalk.green("Creating " + folderPath));
+            try {
+                fs.mkdirSync(folderPath);
+            }
+            catch (e) {
+                log.info(chalk.red("Unable to create " + folderPath + " (e.message)"));
+            }
         }
         else {
-            console.log(chalk.red("Skipping " + folderPath + " (directory already exists)"));
+            log.info(chalk.red("Skipping " + folderPath + " (directory already exists)"));
         }
     }
 }
-module.exports = {
-    makeFolders: makeFolders
-};
+console.log(boxen(APPNAME, { padding: 1 }));
+console.log(APPAUTHOR);
+program.version(packageDotJSON.version);
+console.log("Version: " + program.version);
+program.option('-d, --debug', 'Output extra information during operation');
+program.option('-u, --update', 'Update the Assets definition in the pubspec.yaml file');
+if (isValidConfig()) {
+    program.parse(process.argv);
+    setupLogger();
+    log.info(chalk.green('Configuration is valid\n'));
+    makeFolders();
+    if (program.update) {
+        updatePubspec();
+    }
+}
+else {
+    console.log(chalk.red('Exiting'));
+}
