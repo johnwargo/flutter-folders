@@ -96,7 +96,7 @@ function isValidConfig(): Boolean {
     log.info(EXIT_HEADING + ` Unable to locate the ${filePath} file\n`);
     return false;
   } else {
-    log.info(`Found ${filePath} file`);
+    log.info(`Located ${filePath}`);
   }
 
   // Does the lib folder exist?
@@ -105,16 +105,15 @@ function isValidConfig(): Boolean {
     log.info(EXIT_HEADING + ` Unable to locate the ${filePath} folder\n`);
     return false;
   } else {
-    log.info(`Found ${filePath} file`);
+    log.info(`Located ${filePath}`);
   }
   // is flutter installed?
   filePath = shell.which('flutter').toString();
   if (!filePath) {
-    // TODO: does this work if Flutter isn't installed globally?
     log.info(EXIT_HEADING + ' Unable to locate the Flutter command\n');
     return false;
   } else {
-    log.info(`Found Flutter command at ${path.dirname(filePath)}`);
+    log.info(`Flutter command found at ${path.dirname(filePath)}`);
   }
   log.info(chalk.green('We have a Flutter project'));
   return true;

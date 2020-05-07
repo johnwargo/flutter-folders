@@ -80,7 +80,7 @@ function isValidConfig() {
         return false;
     }
     else {
-        log.info("Found " + filePath + " file");
+        log.info("Located " + filePath);
     }
     filePath = path.join(CURRENT_PATH, 'lib');
     if (!checkDirectory(filePath)) {
@@ -88,7 +88,7 @@ function isValidConfig() {
         return false;
     }
     else {
-        log.info("Found " + filePath + " file");
+        log.info("Located " + filePath);
     }
     filePath = shell.which('flutter').toString();
     if (!filePath) {
