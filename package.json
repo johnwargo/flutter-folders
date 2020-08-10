@@ -1,6 +1,6 @@
 {
   "name": "flutter-folders",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "Node module for creating flutter asset and lib folder structure",
   "main": "flutter-folders.js",
   "bin": "./flutter-folders.js",
