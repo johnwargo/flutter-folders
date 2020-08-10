@@ -28,9 +28,9 @@ const CURRENT_PATH = process.cwd();
 const EXIT_HEADING = chalk.red('Exiting:');
 const PROJECT_FOLDERS: String[] = [
   'assets',
-  'assets/icon',
-  'assets/images',
-  'assets/other',
+  'assets/icon/',
+  'assets/images/',
+  'assets/other/',
   'lib/classes',
   'lib/models',
   'lib/pages',
