@@ -2,6 +2,10 @@
   "name": "flutter-folders",
   "version": "1.0.9",
   "description": "Node module for creating flutter asset and lib folder structure",
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/johnwargo/flutter-folders-node"
+  },
   "main": "flutter-folders.js",
   "bin": "bin/flutter-folders",
   "scripts": {
@@ -13,6 +17,9 @@
     "@types/shelljs": "^0.8.6",
     "boxen": "^4.1.0",
     "chalk": "^3.0.0",
+    "cli-logger": "^0.5.40",
+    "commander": "^5.1.0",
+    "js-yaml": "^3.13.1",
     "shelljs": "^0.8.3"
   }
 }
