@@ -3,13 +3,17 @@
 var boxen = require('boxen');
 var chalk = require('chalk');
 var fs = require('fs');
+var logger = require('cli-logger');
+var packageDotJSON = require('./package.json');
 var path = require('path');
+var program = require('commander');
 var shell = require('shelljs');
-var APPNAME = 'Flutter Project Folder Generator';
-var APPAUTHOR = '  by John M. Wargo (https://johwargo.com)';
-var CURRENTPATH = process.cwd();
-var EXITHEADING = chalk.red('Exiting:');
-var PROJECTFOLDERS = [
+https: var yaml = require('js-yaml');
+var APP_NAME = 'Flutter Folders';
+var APP_AUTHOR = 'by John M. Wargo (https://johwargo.com)';
+var CURRENT_PATH = process.cwd();
+var EXIT_HEADING = chalk.red('Exiting:');
+var PROJECT_FOLDERS = [
     'assets',
     'assets/icon',
     'assets/images',
@@ -21,17 +25,34 @@ var PROJECTFOLDERS = [
     'lib/utils',
     'lib/widgets'
 ];
-var PUBSPECFILE = 'pubspec.yaml';
+var PUBSPEC_FILE = 'pubspec.yaml';
+var log = logger();
+function updatePubspec() {
+    log.info("Updating the " + PUBSPEC_FILE + " file");
+    var pubspecPath = path.join(CURRENT_PATH, PUBSPEC_FILE);
+    try {
+        var fileContents = fs.readFileSync(pubspecPath, 'utf8');
+        var data = yaml.safeLoad(fileContents);
+        data.flutter.assets = ['assets/icon', 'assets/images', 'assets/other'];
+        var yamlStr = yaml.safeDump(data);
+        fs.writeFileSync(pubspecPath, yamlStr, 'utf8');
+    }
+    catch (e) {
+        log.error(chalk.red(e.message));
+    }
+}
 function checkFile(filePath) {
+    log.debug("checkFile(" + filePath + ")");
     try {
         return fs.existsSync(filePath);
     }
     catch (err) {
-        console.error("checkFile error: " + err);
+        log.error("checkFile error: " + err);
         return false;
     }
 }
 function checkDirectory(filePath) {
+    log.debug("checkDirectory(" + filePath + ")");
     if (fs.existsSync(filePath)) {
         try {
             var stats = fs.statSync(filePath);
@@ -43,7 +64,7 @@ function checkDirectory(filePath) {
             }
         }
         catch (err) {
-            console.error("checkDirectory error: " + err);
+            log.error("checkDirectory error: " + err);
             return false;
         }
     }
@@ -51,48 +72,77 @@ function checkDirectory(filePath) {
         return false;
     }
 }
-function makeFolders() {
-    console.log(boxen(APPNAME, { padding: 1 }));
-    console.log(APPAUTHOR);
-    console.log(chalk.yellow('\nValidating Flutter project'));
-    var filePath = path.join(CURRENTPATH, PUBSPECFILE);
+function isValidConfig() {
+    log.info(chalk.yellow('\nValidating Flutter project'));
+    var filePath = path.join(CURRENT_PATH, PUBSPEC_FILE);
     if (!checkFile(filePath)) {
-        console.log(EXITHEADING + (" Unable to locate the " + filePath + " file\n"));
-        shell.exit(1);
+        log.info(EXIT_HEADING + (" Unable to locate the " + filePath + " file\n"));
+        return false;
     }
     else {
-        console.log("Found " + filePath + " file");
+        log.info("Located " + filePath);
     }
-    filePath = path.join(CURRENTPATH, 'lib');
+    filePath = path.join(CURRENT_PATH, 'lib');
     if (!checkDirectory(filePath)) {
-        console.log(EXITHEADING + (" Unable to locate the " + filePath + " folder\n"));
-        shell.exit(1);
+        log.info(EXIT_HEADING + (" Unable to locate the " + filePath + " folder\n"));
+        return false;
     }
     else {
-        console.log("Found " + filePath + " file");
+        log.info("Located " + filePath);
     }
-    filePath = shell.which('flutter').toString();
-    if (!filePath) {
-        console.log(EXITHEADING + ' Unable to locate the Flutter command\n');
-        shell.exit(1);
-    }
-    else {
-        console.log("Found Flutter command at " + path.dirname(filePath));
-    }
-    console.log(chalk.green('We have a Flutter project'));
-    console.log(chalk.yellow('\nCreating project folders'));
-    for (var _i = 0, PROJECTFOLDERS_1 = PROJECTFOLDERS; _i < PROJECTFOLDERS_1.length; _i++) {
-        var folder = PROJECTFOLDERS_1[_i];
-        var folderPath = path.join(CURRENTPATH, folder);
-        if (!checkDirectory(folderPath)) {
-            console.log(chalk.green("Creating " + folderPath));
-            fs.mkdirSync(folderPath);
+    var res = shell.which('flutter');
+    if (res) {
+        filePath = res.toString();
+        if (!filePath) {
+            log.info(EXIT_HEADING + ' Unable to locate the Flutter command\n');
+            return false;
         }
         else {
-            console.log(chalk.red("Skipping " + folderPath + " (directory already exists)"));
+            log.info("Flutter command found at " + path.dirname(filePath));
+        }
+        log.info(chalk.green('We have a Flutter project'));
+        return true;
+    }
+    else {
+        log.info(EXIT_HEADING + ' Unable to locate the Flutter command\n');
+        return false;
+    }
+}
+function makeFolders() {
+    log.info(chalk.yellow('\nCreating project folders'));
+    for (var _i = 0, PROJECT_FOLDERS_1 = PROJECT_FOLDERS; _i < PROJECT_FOLDERS_1.length; _i++) {
+        var folder = PROJECT_FOLDERS_1[_i];
+        var folderPath = path.join(CURRENT_PATH, folder);
+        if (!checkDirectory(folderPath)) {
+            log.info(chalk.green("Creating " + folderPath));
+            try {
+                fs.mkdirSync(folderPath);
+            }
+            catch (e) {
+                log.info(chalk.red("Unable to create " + folderPath + " (e.message)"));
+            }
+        }
+        else {
+            log.info(chalk.red("Skipping " + folderPath + " (directory already exists)"));
         }
     }
 }
-module.exports = {
-    makeFolders: makeFolders
-};
+console.log(boxen(APP_NAME, { padding: 1 }));
+console.log(APP_AUTHOR);
+console.log("Version: " + packageDotJSON.version);
+program.version(packageDotJSON.version);
+program.option('-d, --debug', 'Output extra information during operation');
+program.option('-u, --update', 'Update the Assets definition in the pubspec.yaml file');
+if (isValidConfig()) {
+    program.parse(process.argv);
+    var conf = program.debug ? log.DEBUG : log.INFO;
+    log.level(conf);
+    log.debug(program.opts());
+    makeFolders();
+    if (program.update) {
+        updatePubspec();
+    }
+}
+else {
+    console.log(chalk.red('Exiting'));
+}

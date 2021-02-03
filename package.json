@@ -1,18 +1,26 @@
 {
   "name": "flutter-folders",
-  "version": "1.0.9",
+  "version": "1.0.11",
   "description": "Node module for creating flutter asset and lib folder structure",
-  "main": "flutter-folders.js",
-  "bin": "bin/flutter-folders",
-  "scripts": {
-    "exec": "tsc && node ./flutter-folders.js"
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/johnwargo/flutter-folders-node"
   },
-  "author": "John M. Wargo <john@johnwargo.com> (johnwargo.com)",
+  "main": "flutter-folders.js",
+  "bin": "./flutter-folders.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "tsc && node ./flutter-folders.js"
+  },
+  "author": "John M. Wargo <john@johnwargo.com> (https://johnwargo.com)",
   "license": "MIT",
   "dependencies": {
     "@types/shelljs": "^0.8.6",
     "boxen": "^4.1.0",
     "chalk": "^3.0.0",
+    "cli-logger": "^0.5.40",
+    "commander": "^5.1.0",
+    "js-yaml": "^3.13.1",
     "shelljs": "^0.8.3"
   }
 }

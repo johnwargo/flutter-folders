@@ -1,3 +1,0 @@
-#!/usr/bin/env node
-const mf = require('flutter-folders');
-mf.makeFolders();
