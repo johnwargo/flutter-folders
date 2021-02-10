@@ -15,9 +15,9 @@ var CURRENT_PATH = process.cwd();
 var EXIT_HEADING = chalk.red('Exiting:');
 var PROJECT_FOLDERS = [
     'assets',
-    'assets/icon',
-    'assets/images',
-    'assets/other',
+    'assets/icon/',
+    'assets/images/',
+    'assets/other/',
     'lib/classes',
     'lib/models',
     'lib/pages',
