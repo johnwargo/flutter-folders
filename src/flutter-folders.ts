@@ -23,7 +23,7 @@ const yaml = require('js-yaml')
 
 // constants
 const APP_NAME = 'Flutter Folders';
-const APP_AUTHOR = 'by John M. Wargo (https://johwargo.com)';
+const APP_AUTHOR = 'by John M. Wargo (https://johnwargo.com)';
 const CURRENT_PATH = process.cwd();
 const EXIT_HEADING = chalk.red('Exiting:');
 const PROJECT_FOLDERS: String[] = [
